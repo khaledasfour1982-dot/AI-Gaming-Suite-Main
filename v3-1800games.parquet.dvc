@@ -1,0 +1,5 @@
+outs:
+- md5: 247a029d3f20902a37845c28459488ae
+  size: 1087040
+  hash: md5
+  path: v3-1800games.parquet
