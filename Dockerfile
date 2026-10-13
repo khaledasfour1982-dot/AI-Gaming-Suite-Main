@@ -1,14 +1,13 @@
-FROM ankane/pgvector:latest as schema_init
-COPY chatbot/db/schemas.sql /docker-entrypoint-initdb.d/chatbot-schema.sql
+FROM python:3.12-slim
 
-FROM python:3.11-slim
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+COPY ML_winning_probability/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY . /app
+COPY ML_winning_probability/winprob_api.py /app/winprob_api.py
+COPY ML_winning_probability/winprob_best_model.joblib /app/winprob_best_model.joblib
 
-COPY --from=schema_init /docker-entrypoint-initdb.d/ /app/schemas/
+EXPOSE 8004
 
-CMD ["uvicorn", "chatbot.main:app", "--host", "0.0.0.0", "--port", "8003"]
+CMD ["uvicorn", "winprob_api:app", "--host", "0.0.0.0", "--port", "8004"]
